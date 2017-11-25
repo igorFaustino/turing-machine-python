@@ -1,8 +1,13 @@
+"""
+	This Module simulate a turing machine
+"""
+
 import tape
-import sys
 
 class TuringMachine(object):
-	
+	"""
+		Class Turing Machine, simulate a real turing machine
+	"""
 	def __init__(
 					self,
 					alfabeto_entrada = None,
@@ -23,15 +28,12 @@ class TuringMachine(object):
 		self.fita = tape.Tape(fita),
 		self.simbolo_branco = simbolo_branco
 
-def main():
-	print 'Conteudo Fita:', str(sys.argv[2])
-	try:
-		file = open(sys.argv[1], 'r')
-	except IOError:
-		print "Erro ao abrir o arquivo"
-		return
 
-	print 'Hello arquivo ', str(sys.argv[1])
+def main():
+	"""
+		main function, used to test the class
+	"""
+	pass
 
 if __name__ == "__main__":
 	main()
