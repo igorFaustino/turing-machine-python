@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """ Main file """
 
 import sys
@@ -26,6 +27,21 @@ def main():
 		# Linha 5: estado inicial
 		# Linha 6: conjunto de estados finais
 		# Linha 7: quantidade de fitas
+
+	#Leticia
+	content = file.readline() #lendo todas as linha por linha do arquivo e associando à lista 'content'
+	while content:
+		elements = content.split() #associo o que peguei ate a linha 7 a lista de 'elements'
+		content = file.readline()
+
+	print 'Alfabeto de entrada: ', elements[0]
+	print 'Alfabeto da fita: ', elements[1]
+	print 'Espaco: ', elements[2]
+	print 'Conjunto de estados: ', elements[3]
+	print 'Estado inicial: ', elements[4]
+	print 'Conjunto de estados finais: ', elements[5]
+	print 'Quantidade de fitas: ', elements[6]
+	#end Leticia - OBS: Nao consegui testar ainda, sao so ideias
 
 	# ler as transicoes (linha 8 em diante)
 
