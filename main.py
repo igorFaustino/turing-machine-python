@@ -3,18 +3,26 @@
 
 import sys
 import turing_machine as TM
+import util
 
 def main():
 	"""
 		main function
 	"""
 
-	conteudo_fita = str(sys.argv[2])
+	if len(sys.argv) < 2:
+		print "modo de usar: python main.py arquivo.txt conteudo_fita1"
+		return
+	
+	try:
+		conteudo_fita = str(sys.argv[2])
+	except IndexError:
+		conteudo_fita = None
 	print "conteudo da fita:", conteudo_fita
 
 	# abrir arquivo
 	try:
-		file = open(sys.argv[1], 'r')
+		arquivo = open(sys.argv[1], 'r')
 	except IOError:
 		print "Erro ao abrir o arquivo"
 		return
@@ -29,25 +37,47 @@ def main():
 		# Linha 7: quantidade de fitas
 
 	#Leticia
-	content = file.readline() #lendo todas as linha por linha do arquivo e associando à lista 'content'
-	while content:
-		elements = content.split() #associo o que peguei ate a linha 7 a lista de 'elements'
-		content = file.readline()
+	elements = []
+	content = arquivo.readline() #lendo linhas 1 a 7 e associando à lista 'content'
+	for i in range(7):
+		#associo o que peguei ate a linha 7 a lista de 'elements'
+		elements.append(util.remove_escape_char(content))
+		content = arquivo.readline()
 
-	print 'Alfabeto de entrada: ', elements[0]
-	print 'Alfabeto da fita: ', elements[1]
-	print 'Espaco: ', elements[2]
-	print 'Conjunto de estados: ', elements[3]
-	print 'Estado inicial: ', elements[4]
-	print 'Conjunto de estados finais: ', elements[5]
-	print 'Quantidade de fitas: ', elements[6]
-	#end Leticia - OBS: Nao consegui testar ainda, sao so ideias
+	alfabeto_entrada = elements[0].split(' ')
+	alfabeto_fita = elements[1].split(' ')
+	branco = elements[2]
+	estados = elements[3].split(' ')
+	estado_inicial = elements[4]
+	estados_finais = elements[5].split(' ')
+	qtde_fitas = elements[6]
 
+	if not conteudo_fita:
+		conteudo_fita = branco
+	
 	# ler as transicoes (linha 8 em diante)
+	transicoes = []
+	while content:
+		transicoes.append(util.remove_escape_char(content))
+		content = arquivo.readline()
 
 	# tratar transicoes
+	transicoes = util.format_transicoes(transicoes)
 
 	# instanciar objeto tm
-	tm = TM.TuringMachine()
+	tm = TM.TuringMachine(
+							alfabeto_entrada=alfabeto_entrada,
+							estados=estados,
+							estado_inicial=estado_inicial,
+							estados_finais=estados_finais,
+							qtde_fitas=qtde_fitas,
+							fita=alfabeto_fita,
+							simbolo_branco=branco,
+							transicoes = transicoes,
+							conteudo_fita = conteudo_fita
+						)
 
-	print 'Hello arquivo ', str(sys.argv[1])
+	tm.executar()
+
+if __name__ == "__main__":
+	main()
