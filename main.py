@@ -54,7 +54,7 @@ def main():
 
 	if not conteudo_fita:
 		conteudo_fita = branco
-	
+
 	# ler as transicoes (linha 8 em diante)
 	transicoes = []
 	while content:

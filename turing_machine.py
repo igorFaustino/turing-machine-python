@@ -48,17 +48,19 @@ class TuringMachine(object):
 			tm.cabeca += 1
 		elif transicao[2] == 'L':
 			tm.cabeca -= 1
-		
+
 		if tm.estado_atual in tm.estados_finais and not (tm.estado_atual, simbolo_atual) in tm.transicoes:
+			# marca que a palavra foi aceita
 			self.sucesso = True
 			return True
 		else:
+			# verifica as transicoes da maquina de turing apos executar esta transicao
 			return tm._checar_transicao(tm)
 
 
 	def _checar_transicao(self, tm):
 		"""
-		Verifica quantas transicoes sao possiveis de realizar no estado atual 
+		Verifica quantas transicoes sao possiveis de realizar no estado atual
 		e chama a funcao _transicao para cada uma delas
 			:param self:
 			:param tm: maquina de turing
@@ -86,15 +88,14 @@ class TuringMachine(object):
 		Executa toda a computacao das palavras
 			:param self:
 		"""
-		
+
 		sucesso = self._checar_transicao(self)
-		
+
 		if sucesso:
 			print "Linguagem aceita"
 			print "fita final", self.fita.getConteudo()
 		else:
-			print "deu ruim"
-		
+			print "deu ruim"	
 
 
 def main():
