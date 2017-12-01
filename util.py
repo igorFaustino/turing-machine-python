@@ -16,10 +16,11 @@ def format_transicoes(transicoes):
 		:param transicoes: transicoes a ser formatadas
 	"""
 
-	_transicao = None
-	_transicoes = {}
+	_transicao = {}
+	_transicoes = []
 	for transicao in transicoes:
-		_transicao = transicao.split(' ')
-		_transicoes[(_transicao[0], _transicao[2])] = (_transicao[1], _transicao[3], _transicao[4])
+		transicao = transicao.split(' ')
+		_transicao = { (transicao[0], transicao[2]) : (transicao[1], transicao[3], transicao[4])}
+		_transicoes.append(_transicao)
 
 	return _transicoes

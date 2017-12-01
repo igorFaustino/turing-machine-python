@@ -3,6 +3,7 @@
 """
 
 import tape
+import copy
 
 class TuringMachine(object):
 	""" Class Turing Machine, Simula uma maquina de turing """
@@ -29,32 +30,64 @@ class TuringMachine(object):
 		self.simbolo_branco = simbolo_branco
 		self.cabeca = 0
 		self.estado_atual = estado_inicial
+		self.sucesso = False
 
-	def transicao(self):
-		simbolo_atual = self.fita.ler(self.cabeca)
+	def _transicao(self, tm, transicao):
+		"""
+		Computa as transicoes da maquina de turing
+			:param self:
+			:param tm: maquina de turing
+			:param transicao: transicao a ser computada
+		"""
+		simbolo_atual = tm.fita.ler(tm.cabeca)
 
+		tm.estado_atual = transicao[0]
+		tm.fita.escrever(tm.cabeca, transicao[1])
+
+		if transicao[2] == 'R':
+			tm.cabeca += 1
+		elif transicao[2] == 'L':
+			tm.cabeca -= 1
+		
+		if tm.estado_atual in tm.estados_finais and not (tm.estado_atual, simbolo_atual) in tm.transicoes:
+			self.sucesso = True
+			return True
+		else:
+			return tm._checar_transicao(tm)
+
+
+	def _checar_transicao(self, tm):
+		"""
+		Verifica quantas transicoes sao possiveis de realizar no estado atual 
+		e chama a funcao _transicao para cada uma delas
+			:param self:
+			:param tm: maquina de turing
+		"""
+		simbolo_atual = tm.fita.ler(tm.cabeca)
 		if not simbolo_atual:
-			simbolo_atual = self.simbolo_branco
-
+			simbolo_atual = tm.simbolo_branco
+		sucesso = False
+		_sucesso = False
 		try:
-			transicao = self.transicoes[(self.estado_atual, simbolo_atual)]
+			for transicao in tm.transicoes:
+				if (tm.estado_atual, simbolo_atual) in transicao:
+					_sucesso = tm._transicao(copy.copy(tm), transicao[(tm.estado_atual, simbolo_atual)])
+
+					if _sucesso:
+						return True
 		except KeyError:
 			return False
 
-		self.estado_atual = transicao[0]
-		self.fita.escrever(self.cabeca, transicao[1])
+		return sucesso
 
-		if transicao[2] == 'R':
-			self.cabeca += 1
-		elif transicao[2] == 'L':
-			self.cabeca -= 1
-		
-		return True
 
 	def executar(self):
-		sucesso = True
-		while self.estado_atual not in self.estados_finais and sucesso:
-			sucesso = self.transicao()
+		"""
+		Executa toda a computacao das palavras
+			:param self:
+		"""
+		
+		sucesso = self._checar_transicao(self)
 		
 		if sucesso:
 			print "Linguagem aceita"
