@@ -11,14 +11,8 @@ def main():
 	"""
 
 	if len(sys.argv) < 2:
-		print "modo de usar: python main.py arquivo.txt conteudo_fita1"
+		print "modo de usar: python main.py arquivo.txt conteudo_fita1 [conteudo_fita2... ]"
 		return
-	
-	try:
-		conteudo_fita = str(sys.argv[2])
-	except IndexError:
-		conteudo_fita = None
-	print "conteudo da fita:", conteudo_fita
 
 	# abrir arquivo
 	try:
@@ -52,8 +46,17 @@ def main():
 	estados_finais = elements[5].split(' ')
 	qtde_fitas = elements[6]
 
-	if not conteudo_fita:
-		conteudo_fita = branco
+	conteudo_fita = []
+	try:
+		for i in range(int(qtde_fitas)):
+			conteudo_fita.append(str(sys.argv[2+i]))
+	except IndexError:
+		print "modo de usar: python main.py arquivo.txt conteudo_fita1 [conteudo_fita2... ]"
+		return
+
+	# for i in range(int(qtde_fitas)):
+	# 	print "conteudo da fita", i+1,": ", conteudo_fita[i]
+
 
 	# ler as transicoes (linha 8 em diante)
 	transicoes = []
@@ -62,8 +65,8 @@ def main():
 		content = arquivo.readline()
 
 	# tratar transicoes
-	transicoes = util.format_transicoes(transicoes)
-
+	transicoes = util.format_transicoes(transicoes, int(qtde_fitas))
+	# print transicoes
 	# instanciar objeto tm
 	tm = TM.TuringMachine(
 							alfabeto_entrada=alfabeto_entrada,
@@ -74,10 +77,11 @@ def main():
 							fita=alfabeto_fita,
 							simbolo_branco=branco,
 							transicoes = transicoes,
-							conteudo_fita = conteudo_fita
+							conteudo_fitas = conteudo_fita
 						)
 
 	tm.executar()
+	tm.resultado()
 
 if __name__ == "__main__":
 	main()

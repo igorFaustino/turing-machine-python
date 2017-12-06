@@ -18,7 +18,7 @@ class TuringMachine(object):
 					transicoes = [],
 					fita = None,
 					simbolo_branco = 'B',
-					conteudo_fita = ''
+					conteudo_fitas = []
 				):
 		self.alfabeto_entrada = alfabeto_entrada
 		self.estados = estados
@@ -26,30 +26,44 @@ class TuringMachine(object):
 		self.estados_finais = estados_finais
 		self.qtde_fitas = qtde_fitas
 		self.transicoes = transicoes
-		self.fita = tape.Tape(fita, conteudo_fita)
+		self.fita = self.init_fita(conteudo_fitas, qtde_fitas, fita, simbolo_branco)
 		self.simbolo_branco = simbolo_branco
-		self.cabeca = 0
+		self.cabeca = self.init_cabeca(qtde_fitas)
 		self.estado_atual = estado_inicial
 		self.sucesso = False
 
-	def _transicao(self, tm, transicao):
+	def init_cabeca(self, qtd):
+		cabeca = []
+		for i in range(int(qtd)):
+			cabeca.append(0)
+		return cabeca
+
+	def init_fita(self, conteudo_fitas, qtd, fita, simbolo_branco):
+		fitas = []
+		for i in range(int(qtd)):
+			fitas.append(
+				tape.Tape(fita, conteudo_fitas[i], simbolo_branco)
+			)
+		return fitas
+
+	def _transicao(self, tm, transicoes):
 		"""
 		Computa as transicoes da maquina de turing
-			:param self:
 			:param tm: maquina de turing
 			:param transicao: transicao a ser computada
 		"""
-		simbolo_atual = tm.fita.ler(tm.cabeca)
 
-		tm.estado_atual = transicao[0]
-		tm.fita.escrever(tm.cabeca, transicao[1])
+		tm.estado_atual = transicoes[0][0]
+		for transicao in transicoes:
+			i = transicao[3]
+			tm.fita[i].escrever(tm.cabeca[i], transicao[1])
 
-		if transicao[2] == 'R':
-			tm.cabeca += 1
-		elif transicao[2] == 'L':
-			tm.cabeca -= 1
+			if transicao[2] == 'R':
+				tm.cabeca[i] += 1
+			elif transicao[2] == 'L':
+				tm.cabeca[i] -= 1
 
-		if tm.estado_atual in tm.estados_finais and not (tm.estado_atual, simbolo_atual) in tm.transicoes:
+		if tm.estado_atual in tm.estados_finais:
 			# marca que a palavra foi aceita
 			self.sucesso = True
 			return True
@@ -62,41 +76,48 @@ class TuringMachine(object):
 		"""
 		Verifica quantas transicoes sao possiveis de realizar no estado atual
 		e chama a funcao _transicao para cada uma delas
-			:param self:
 			:param tm: maquina de turing
 		"""
-		simbolo_atual = tm.fita.ler(tm.cabeca)
-		if not simbolo_atual:
-			simbolo_atual = tm.simbolo_branco
-		sucesso = False
+
 		_sucesso = False
+		_transicao = []
 		try:
 			for transicao in tm.transicoes:
-				if (tm.estado_atual, simbolo_atual) in transicao:
-					_sucesso = tm._transicao(copy.copy(tm), transicao[(tm.estado_atual, simbolo_atual)])
-
-					if _sucesso:
-						return True
+				cont_fitas = 0
+				for i in range(int(tm.qtde_fitas)):
+					if (tm.estado_atual, tm.fita[i].ler(tm.cabeca[i])) in transicao:
+						cont_fitas = cont_fitas + 1
+						_transicao.append(transicao[(tm.estado_atual, tm.fita[i].ler(tm.cabeca[i]))])
+				if cont_fitas == int(self.qtde_fitas):
+					_sucesso = tm._transicao(copy.copy(tm), _transicao)
+					_transicao = []
 		except KeyError:
 			return False
 
-		return sucesso
+		return _sucesso
 
 
 	def executar(self):
 		"""
 		Executa toda a computacao das palavras
-			:param self:
 		"""
 
 		sucesso = self._checar_transicao(self)
+		self.sucesso = sucesso
+		return sucesso
 
-		if sucesso:
+	def resultado(self):
+		"""
+		Exibe os resultados
+		"""
+		if self.sucesso:
 			print "Linguagem aceita"
-			print "fita final", self.fita.getConteudo()
+			i = 0
+			for fita in self.fita:
+				i = i + 1
+				print "Conteudo final da fita", i, ":", fita.getConteudo()
 		else:
-			print "deu ruim"	
-
+			print "Linguagem nao aceita"
 
 def main():
 	""" funcao principal """

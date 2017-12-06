@@ -7,7 +7,7 @@ class Tape(object):
 		Class Tape, simula uma fita real usada na maquina de turing
 	"""
 
-	def __init__(self, alfabeto="",conteudo=""):
+	def __init__(self, alfabeto="", conteudo="", simbolo_branco="B"):
 		"""
 		inicia a classe
 			:param self:
@@ -15,6 +15,7 @@ class Tape(object):
 		"""
 		self.alfabeto = alfabeto
 		self.conteudo = dict((enumerate(conteudo)))
+		self.simbolo_branco = simbolo_branco
 
 	def ler(self, posicao):
 		"""
@@ -25,7 +26,7 @@ class Tape(object):
 		if posicao >= 0 and posicao < len(self.conteudo):
 			return self.conteudo[posicao]
 		else:
-			return False
+			return self.simbolo_branco
 
 	def escrever(self, posicao, valor):
 		"""

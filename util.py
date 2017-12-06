@@ -10,17 +10,18 @@ def remove_escape_char(string):
 	string = string.translate(None, escapes)
 	return string
 
-def format_transicoes(transicoes):
+def format_transicoes(transicoes, qtd_fitas):
 	"""
 	Formata a string para uma lista de transicoes
 		:param transicoes: transicoes a ser formatadas
 	"""
-
-	_transicao = {}
+	qtd_fitas = int(qtd_fitas)
 	_transicoes = []
 	for transicao in transicoes:
+		_transicao = {}
 		transicao = transicao.split(' ')
-		_transicao = { (transicao[0], transicao[2]) : (transicao[1], transicao[3], transicao[4])}
+		for i in range(qtd_fitas):
+			_transicao[(transicao[0], transicao[2 + (i*3)])] = (transicao[1], transicao[3 + (i*3)], transicao[4 + (i*3)], i)
 		_transicoes.append(_transicao)
 
 	return _transicoes
