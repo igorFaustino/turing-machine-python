@@ -1,4 +1,4 @@
-""" Funcoes uteis """
+""" Funções úteis """
 
 def remove_escape_char(string):
 	"""
@@ -12,8 +12,8 @@ def remove_escape_char(string):
 
 def format_transicoes(transicoes, qtd_fitas):
 	"""
-	Formata a string para uma lista de transicoes
-		:param transicoes: transicoes a ser formatadas
+	Formata a string para uma lista de transições
+		:param transicoes: transições a serem formatadas
 	"""
 	qtd_fitas = int(qtd_fitas)
 	_transicoes = []

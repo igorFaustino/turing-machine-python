@@ -1,5 +1,20 @@
 # -*- coding: utf-8 -*-
-""" Main file """
+"""
+					Universidade Tecnológica Federal do Paraná - Campus Campo Mourão
+Programa: Máquina de Turing Não Determinística com N-Fitas.
+Alunos: Igor Neves Faustino, Eduardo Barbosa de Oliveira, Letícia Mazzo Portela, Jonas Felipe Alves.
+Professor: Marco A. Graciotto Silva.
+Curso: Bacharelado em Ciência da Computação.
+Disciplina: Linguagens Formais Autômatos e Computabilidade..
+"""
+
+"""
+O projeto conta com 4 scripts: main, tape, turing_machine e util.
+Além disso, conta com uma pasta intitulada testFiles, onde constam os arquivos para testar o funcionamento da Máquina de Turing.
+Para executar, é necessário utilizar os seguintes comandos:
+	python jflap-turing2utfpr.py nomearquivopasta.jff nomearquivopasta.txt
+	python main.py nomearquivopasta.txt conteudo_fita1 conteudo_fita2...conteudo_fitax
+"""
 
 import sys
 import turing_machine as TM
@@ -11,10 +26,10 @@ def main():
 	"""
 
 	if len(sys.argv) < 2:
-		print "modo de usar: python main.py arquivo.txt conteudo_fita1 [conteudo_fita2... ]"
+		print "Modo de usar: python main.py arquivo.txt conteudo_fita1 [conteudo_fita2... ]"
 		return
 
-	# abrir arquivo
+	# Abrir arquivo
 	try:
 		arquivo = open(sys.argv[1], 'r')
 	except IOError:
@@ -30,22 +45,23 @@ def main():
 		# Linha 6: conjunto de estados finais
 		# Linha 7: quantidade de fitas
 
-	#Leticia
+	#Das linhas 34 a 47 é feita a leitura do arquivo, conforme descrito entre as linhas 25 e 31.
 	elements = []
-	content = arquivo.readline() #lendo linhas 1 a 7 e associando à lista 'content'
+	content = arquivo.readline() #Lendo linhas 1 a 7 e associando à lista 'content'.
 	for i in range(7):
-		#associo o que peguei ate a linha 7 a lista de 'elements'
+		#Associo o que peguei até a linha 7 à lista de 'elements'.
 		elements.append(util.remove_escape_char(content))
 		content = arquivo.readline()
 
 	alfabeto_entrada = elements[0].split(' ')
-	alfabeto_fita = elements[1].split(' ')
-	branco = elements[2]
-	estados = elements[3].split(' ')
-	estado_inicial = elements[4]
-	estados_finais = elements[5].split(' ')
-	qtde_fitas = elements[6]
+	alfabeto_fita    = elements[1].split(' ')
+	branco           = elements[2]
+	estados          = elements[3].split(' ')
+	estado_inicial   = elements[4]
+	estados_finais   = elements[5].split(' ')
+	qtde_fitas       = elements[6]
 
+	#A partir da linha 50 até a linha 56, é feita a associação, conforme a quantidade de fitas lidas, do conteúdo delas, ficando isso armazenado na lista conteudo_fita.
 	conteudo_fita = []
 	try:
 		for i in range(int(qtde_fitas)):
@@ -54,30 +70,26 @@ def main():
 		print "modo de usar: python main.py arquivo.txt conteudo_fita1 [conteudo_fita2... ]"
 		return
 
-	# for i in range(int(qtde_fitas)):
-	# 	print "conteudo da fita", i+1,": ", conteudo_fita[i]
-
-
-	# ler as transicoes (linha 8 em diante)
+	# A partir da linha 63 em diante, é feita a leitura das transições em relação a linha 8 em diante do arquivo fornecido.
 	transicoes = []
 	while content:
 		transicoes.append(util.remove_escape_char(content))
 		content = arquivo.readline()
 
-	# tratar transicoes
+	# Tratar transições
 	transicoes = util.format_transicoes(transicoes, int(qtde_fitas))
-	# print transicoes
-	# instanciar objeto tm
+	
+	# Instanciar objeto tm
 	tm = TM.TuringMachine(
-							alfabeto_entrada=alfabeto_entrada,
-							estados=estados,
-							estado_inicial=estado_inicial,
-							estados_finais=estados_finais,
-							qtde_fitas=qtde_fitas,
-							fita=alfabeto_fita,
-							simbolo_branco=branco,
-							transicoes = transicoes,
-							conteudo_fitas = conteudo_fita
+							alfabeto_entrada = alfabeto_entrada,
+							estados          = estados,
+							estado_inicial   = estado_inicial,
+							estados_finais   = estados_finais,
+							qtde_fitas       = qtde_fitas,
+							fita             = alfabeto_fita,
+							simbolo_branco   = branco,
+							transicoes       = transicoes,
+							conteudo_fitas   = conteudo_fita
 						)
 
 	tm.executar()

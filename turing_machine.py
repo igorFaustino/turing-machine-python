@@ -1,37 +1,37 @@
 """
-	Simula uma maquina de turing
+	Script responsável pela simulação de uma Máquina de Turing.
 """
 
 import tape
 import copy
 
 class TuringMachine(object):
-	""" Class Turing Machine, Simula uma maquina de turing """
+	""" Esta classe é quem faz a simulação. """
 
 	def __init__(
 					self,
 					alfabeto_entrada = None,
-					estados = [],
-					estado_inicial = None,
-					estados_finais = [],
-					qtde_fitas = 1,
-					transicoes = [],
-					fita = None,
-					simbolo_branco = 'B',
-					conteudo_fitas = []
+					estados          = [],
+					estado_inicial   = None,
+					estados_finais   = [],
+					qtde_fitas       = 1,
+					transicoes       = [],
+					fita             = None,
+					simbolo_branco   = 'B',
+					conteudo_fitas   = []
 				):
 		self.alfabeto_entrada = alfabeto_entrada
-		self.estados = estados
-		self.estado_inicial = estado_inicial
-		self.estados_finais = estados_finais
-		self.qtde_fitas = qtde_fitas
-		self.transicoes = transicoes
-		self.fita = self.init_fita(conteudo_fitas, qtde_fitas, fita, simbolo_branco)
-		self.simbolo_branco = simbolo_branco
-		self.cabeca = self.init_cabeca(qtde_fitas)
-		self.estado_atual = estado_inicial
-		self.sucesso = False
-
+		self.estados          = estados
+		self.estado_inicial   = estado_inicial
+		self.estados_finais   = estados_finais
+		self.qtde_fitas       = qtde_fitas
+		self.transicoes       = transicoes
+		self.fita             = self.init_fita(conteudo_fitas, qtde_fitas, fita, simbolo_branco)
+		self.simbolo_branco   = simbolo_branco
+		self.cabeca           = self.init_cabeca(qtde_fitas)
+		self.estado_atual     = estado_inicial
+		self.sucesso          = False
+	""" Acima, estão as configurações do que foi lido do arquivo, conforme especificado no arq. main """
 	def init_cabeca(self, qtd):
 		cabeca = []
 		for i in range(int(qtd)):
@@ -48,35 +48,35 @@ class TuringMachine(object):
 
 	def _transicao(self, tm, transicoes):
 		"""
-		Computa as transicoes da maquina de turing
-			:param tm: maquina de turing
-			:param transicao: transicao a ser computada
+		Computa as transições da Máquina de Turing
+			:param tm: Máquina de Turing
+			:param transicao: transição a ser computada
 		"""
-
+		""" Faz o controle entre as transições e o comportamento da fita """
 		tm.estado_atual = transicoes[0][0]
 		for transicao in transicoes:
 			i = transicao[3]
 			tm.fita[i].escrever(tm.cabeca[i], transicao[1])
 
-			if transicao[2] == 'R':
+			if transicao[2] == 'R': #transiçao a direita da fita
 				tm.cabeca[i] += 1
-			elif transicao[2] == 'L':
+			elif transicao[2] == 'L': #transição a esquerda da fita
 				tm.cabeca[i] -= 1
 
 		if tm.estado_atual in tm.estados_finais:
-			# marca que a palavra foi aceita
+			# Marca que a palavra foi aceita
 			self.sucesso = True
 			return True
 		else:
-			# verifica as transicoes da maquina de turing apos executar esta transicao
+			# Verifica as transições da Máquina de Turing após executar esta transição.
 			return tm._checar_transicao(tm)
 
 
 	def _checar_transicao(self, tm):
 		"""
-		Verifica quantas transicoes sao possiveis de realizar no estado atual
+		Verifica quantas transições são possíveis de realizar no estado atual
 		e chama a funcao _transicao para cada uma delas
-			:param tm: maquina de turing
+			:param tm: Máquina de Turing
 		"""
 
 		_sucesso = False
@@ -99,7 +99,7 @@ class TuringMachine(object):
 
 	def executar(self):
 		"""
-		Executa toda a computacao das palavras
+		Executa toda a computação das palavras
 		"""
 
 		sucesso = self._checar_transicao(self)

@@ -1,27 +1,27 @@
 """
-	simula uma fita real usada na maquina de turing
+	Este script serve para simular uma fita real usada na Máquina de Turing.
 """
 
 class Tape(object):
 	"""
-		Class Tape, simula uma fita real usada na maquina de turing
+		Class Tape: Ela quem faz a simulação.
 	"""
 
 	def __init__(self, alfabeto="", conteudo="", simbolo_branco="B"):
 		"""
-		inicia a classe
+		Inicia a classe
 			:param self:
 			:param alfabeto="": valor da fita
 		"""
-		self.alfabeto = alfabeto
-		self.conteudo = dict((enumerate(conteudo)))
+		self.alfabeto       = alfabeto
+		self.conteudo       = dict((enumerate(conteudo)))
 		self.simbolo_branco = simbolo_branco
 
 	def ler(self, posicao):
 		"""
-		verifica se a posicao esta na fita e retorna ela, caso o contrario informa que esta em branco
+		Verifica se a posição está na fita e retorna ela, caso contrário informa que está em branco.
 			:param self:
-			:param posicao: posicao da cabeca
+			:param posicao: posição da cabeça
 		"""
 		if posicao >= 0 and posicao < len(self.conteudo):
 			return self.conteudo[posicao]
@@ -30,9 +30,9 @@ class Tape(object):
 
 	def escrever(self, posicao, valor):
 		"""
-		escreve os valores na fita
+		Escreve os valores na fita
 			:param self:
-			:param posicao: posicao da cabeca
+			:param posicao: posição da cabeca
 			:param valor: valor a ser escrito
 		"""
 		if posicao < 0:
