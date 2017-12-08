@@ -31,7 +31,8 @@ class TuringMachine(object):
 		self.cabeca           = self.init_cabeca(qtde_fitas)
 		self.estado_atual     = estado_inicial
 		self.sucesso          = False
-	""" Acima, estão as configurações do que foi lido do arquivo, conforme especificado no arq. main """
+		#Acima, estão as configurações do que foi lido do arquivo, conforme especificado no arq. main
+
 	def init_cabeca(self, qtd):
 		cabeca = []
 		for i in range(int(qtd)):

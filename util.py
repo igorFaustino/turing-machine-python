@@ -1,5 +1,3 @@
-""" Funções úteis """
-
 def remove_escape_char(string):
 	"""
 	Retira todos os caracteres especiais da string ('\n', '\r', '\t' etc)
