@@ -32,8 +32,8 @@ class TapeMovement(object):
 	def __init__(self):
 		self.tape = 1
 		self.currentTapeSymbol = None
-		self.newTapeSymbol = None
-		self.headDirection = None
+		self.newTapeSymbol     = None
+		self.headDirection     = None
 
 	def __lt__(self, other):
 		if self.currentTapeSymbol < other.currentTapeSymbol:
@@ -49,21 +49,21 @@ class TapeMovement(object):
 
 class Jflap2Utfpr(object):
 	def __init__(self):
-		self.alphabet = set()
-		self.states = set()
-		self.tapeSymbols = set()
-		self.tapes = 1
+		self.alphabet     = set()
+		self.states       = set()
+		self.tapeSymbols  = set()
+		self.tapes        = 1
 		self.initialState = None
-		self.finalStates = set()
-		self.transitions = set()
-		self.singleTape = False
+		self.finalStates  = set()
+		self.transitions  = set()
+		self.singleTape   = False
 
 	def convert(self, inputFile, outputFile, blankSymbol = 'B', alphabet = None):
 		self.blankSymbol = blankSymbol
 		self.tapeSymbols.add(self.blankSymbol)
 
 		xmldoc = ET.parse(inputFile)
-		root = xmldoc.getroot()
+		root   = xmldoc.getroot()
 		if root.find('tapes') == None:
 			self.singleTape = True
 			self.tapes = 1
