@@ -8,14 +8,6 @@ Curso: Bacharelado em Ciência da Computação.
 Disciplina: Linguagens Formais Autômatos e Computabilidade..
 """
 
-"""
-O projeto conta com 4 scripts: main, tape, turing_machine e util.
-Além disso, conta com uma pasta intitulada testFiles, onde constam os arquivos para testar o funcionamento da Máquina de Turing.
-Para executar, é necessário utilizar os seguintes comandos:
-	python jflap-turing2utfpr.py nomearquivopasta.jff nomearquivopasta.txt -> Converter o arquivo
-	python main.py nomearquivopasta.txt conteudo_fita1 [conteudo_fita2...conteudo_fitax]
-"""
-
 import sys
 import turing_machine as TM
 import util
