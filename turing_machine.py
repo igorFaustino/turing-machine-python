@@ -1,5 +1,5 @@
 """
-	Simula uma maquina de turing
+	Script responsavel pela simulacao de uma Maquina de Turing.
 """
 
 import tape
@@ -18,7 +18,7 @@ class TuringMachine(object):
 					transicoes = [],
 					fita = None,
 					simbolo_branco = 'B',
-					conteudo_fita = ''
+					conteudo_fitas = []
 				):
 		self.alfabeto_entrada = alfabeto_entrada
 		self.estados = estados
@@ -26,76 +26,130 @@ class TuringMachine(object):
 		self.estados_finais = estados_finais
 		self.qtde_fitas = qtde_fitas
 		self.transicoes = transicoes
-		self.fita = tape.Tape(fita, conteudo_fita)
+		self.fita = self.init_fita(conteudo_fitas, qtde_fitas, fita, simbolo_branco)
 		self.simbolo_branco = simbolo_branco
-		self.cabeca = 0
+		self.cabeca = self.init_cabeca(qtde_fitas)
 		self.estado_atual = estado_inicial
 		self.sucesso = False
+		#Acima, estao as configuracoes do que foi lido do arquivo, conforme especificado no arq. main
 
-	def _transicao(self, tm, transicao):
+
+	def init_cabeca(self, qtd):
 		"""
-		Computa as transicoes da maquina de turing
-			:param self:
+		Inicia um vetor de contadores para controlar a posicao na fita
+			:param self: objeto TuringMachine
+			:param qtd: quantidade de fitas
+		"""
+
+		cabeca = []
+		for i in range(int(qtd)):
+			cabeca.append(0)
+		return cabeca
+
+	def init_fita(self, conteudo_fitas, qtd, fita, simbolo_branco):
+		"""
+		Inicia um vetor de objetos Tape
+			:param self: objeto TuringMachine
+			:param conteudo_fitas: vetor de conteudo de cada fita
+			:param qtd: quantidade de fitas
+			:param fita: alfabeto da fita
+			:param simbolo_branco: simbolo "Branco"
+		"""
+
+		fitas = []
+		for i in range(int(qtd)):
+			fitas.append(tape.Tape(fita, conteudo_fitas[i], simbolo_branco))
+		return fitas
+
+	def _transicao(self, tm, transicoes):
+		"""
+		Faz o controle entre as transicoes e o comportamento da fita
+			:param self: objeto TuringMachine
 			:param tm: maquina de turing
 			:param transicao: transicao a ser computada
 		"""
-		simbolo_atual = tm.fita.ler(tm.cabeca)
 
-		tm.estado_atual = transicao[0]
-		tm.fita.escrever(tm.cabeca, transicao[1])
+		for transicao in transicoes:
+			i = transicao[3]
+			tm.estado_atual = transicao[0]
+			tm.fita[i].escrever(tm.cabeca[i], transicao[1])
 
-		if transicao[2] == 'R':
-			tm.cabeca += 1
-		elif transicao[2] == 'L':
-			tm.cabeca -= 1
-		
-		if tm.estado_atual in tm.estados_finais and not (tm.estado_atual, simbolo_atual) in tm.transicoes:
+			#transicao a direita da fita
+			if transicao[2] == 'R':
+				tm.cabeca[i] += 1
+			#transicao a esquerda da fita
+			elif transicao[2] == 'L':
+				# como a funcao de escrever na fita insere elementos no comeco.. a posicao 0 sempre e o inicio da fita, logo a posicao -1 indica que a posicao lida esta fora do conteudo atual da fita
+				if tm.cabeca[i] >= -1:
+					tm.cabeca[i] -= 1
+
+		if tm.estado_atual in tm.estados_finais:
+			# Marca que a palavra foi aceita
 			self.sucesso = True
-			return True
+			# retorna em cascata o conteudo atualizado das fitas
+			return True, tm.fita
 		else:
+			# Verifica as transicoes da Maquina de Turing apos executar esta transicao e passa a diante o retorno em cascata.
 			return tm._checar_transicao(tm)
 
 
 	def _checar_transicao(self, tm):
 		"""
-		Verifica quantas transicoes sao possiveis de realizar no estado atual 
+		Verifica quantas transicoes sao possiveis de realizar no estado atual
 		e chama a funcao _transicao para cada uma delas
-			:param self:
+			:param self: objeto TuringMachine
 			:param tm: maquina de turing
 		"""
-		simbolo_atual = tm.fita.ler(tm.cabeca)
-		if not simbolo_atual:
-			simbolo_atual = tm.simbolo_branco
-		sucesso = False
+
+		# flag para verificar se a palavra foi aceita
 		_sucesso = False
-		try:
-			for transicao in tm.transicoes:
-				if (tm.estado_atual, simbolo_atual) in transicao:
-					_sucesso = tm._transicao(copy.copy(tm), transicao[(tm.estado_atual, simbolo_atual)])
 
-					if _sucesso:
-						return True
-		except KeyError:
-			return False
+		# objeto de retorno.. como a cada iteracao a mt e clonada, e necessario retornar o novo estado das fitas
+		fitas = tm.fita
+		for transicao in tm.transicoes:
+			_transicao = []
+			for i in range(int(tm.qtde_fitas)):
+				if (tm.estado_atual, tm.fita[i].ler(tm.cabeca[i])) in transicao:
+					_transicao.append(transicao[tm.estado_atual, tm.fita[i].ler(tm.cabeca[i])])
+			if len(_transicao) == int(tm.qtde_fitas):
+				_sucesso, fitas = tm._transicao(copy.deepcopy(tm), _transicao)
 
-		return sucesso
+			if _sucesso:
+				# retorna em cascata o conteudo atualizado das fitas
+				return True, fitas
+
+		# retorna em cascata o conteudo atualizado das fitas
+		return False, fitas
 
 
 	def executar(self):
 		"""
 		Executa toda a computacao das palavras
-			:param self:
+			:param self: objeto TuringMachine
 		"""
-		
-		sucesso = self._checar_transicao(self)
-		
-		if sucesso:
-			print "Linguagem aceita"
-			print "fita final", self.fita.getConteudo()
-		else:
-			print "deu ruim"
-		
 
+		sucesso, self.fita = self._checar_transicao(self)
+		self.sucesso = sucesso
+		return sucesso
+
+
+	def resultado(self):
+		"""
+		Exibe os resultados
+			:param self: objeto TuringMachine
+		"""
+
+		print "\n-----------------"
+		if self.sucesso:
+			print "Palavra aceita"
+		else:
+			print "Palavra nao aceita"
+		print "-----------------\n"
+		
+		i = 0
+		for fita in self.fita:
+			i = i + 1
+			print "Conteudo final da fita", i, ":", fita.getConteudo()
 
 def main():
 	""" funcao principal """

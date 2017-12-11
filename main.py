@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
-""" Main file """
+"""
+Universidade Tecnologica Federal do Parana - Campus Campo Mourao
+Programa: Maquina de Turing Nao Deterministica com N-Fitas.
+Alunos: Igor Neves Faustino, Eduardo Barbosa de Oliveira, Leticia Mazzo Portela, Jonas Felipe Alves.
+Professor: Marco A. Graciotto Silva.
+Curso: Bacharelado em Ciencia da Computacao.
+Disciplina: Linguagens Formais Autômatos e Computabilidade.
+"""
 
 import sys
 import turing_machine as TM
@@ -11,14 +18,9 @@ def main():
 	"""
 
 	if len(sys.argv) < 2:
-		print "modo de usar: python main.py arquivo.txt conteudo_fita1"
+		print "modo de usar: python main.py arquivo.txt conteudo_fita1 [conteudo_fita2...]"
 		return
 	
-	try:
-		conteudo_fita = str(sys.argv[2])
-	except IndexError:
-		conteudo_fita = None
-	print "conteudo da fita:", conteudo_fita
 
 	# abrir arquivo
 	try:
@@ -36,9 +38,9 @@ def main():
 		# Linha 6: conjunto de estados finais
 		# Linha 7: quantidade de fitas
 
-	#Leticia
+	#Das linhas 42 a 55 e feita a leitura do arquivo, conforme descrito entre as linhas 32 e 39.
 	elements = []
-	content = arquivo.readline() #lendo linhas 1 a 7 e associando à lista 'content'
+	content = arquivo.readline() #lendo linhas 1 a 7 e associando a lista 'content'
 	for i in range(7):
 		#associo o que peguei ate a linha 7 a lista de 'elements'
 		elements.append(util.remove_escape_char(content))
@@ -52,17 +54,27 @@ def main():
 	estados_finais = elements[5].split(' ')
 	qtde_fitas = elements[6]
 
-	if not conteudo_fita:
-		conteudo_fita = branco
-	
-	# ler as transicoes (linha 8 em diante)
+	#A partir da linha 58 ate a linha 64, e feita a associacao, conforme a quantidade de fitas lidas, do conteúdo delas, ficando isso armazenado na lista conteudo_fita.
+	conteudo_fitas = []
+	try:
+		for i in range(int(qtde_fitas)):
+			conteudo_fitas.append(str(sys.argv[2 + i]))
+	except IndexError:
+		print "modo de usar: python main.py arquivo.txt conteudo_fita1 [conteudo_fita2...]"
+		return 0
+
+	# mostrar conteudo das fitas
+	for i in range(int(qtde_fitas)):
+		print "conteudo da fita " + str(i+1) +":", conteudo_fitas[i]
+
+	# A partir da linha 71 em diante, e feita a leitura das transicoes em relacao a linha 8 em diante do arquivo fornecido.
 	transicoes = []
 	while content:
 		transicoes.append(util.remove_escape_char(content))
 		content = arquivo.readline()
 
 	# tratar transicoes
-	transicoes = util.format_transicoes(transicoes)
+	transicoes = util.format_transicoes(transicoes, qtde_fitas)
 
 	# instanciar objeto tm
 	tm = TM.TuringMachine(
@@ -74,10 +86,11 @@ def main():
 							fita=alfabeto_fita,
 							simbolo_branco=branco,
 							transicoes = transicoes,
-							conteudo_fita = conteudo_fita
+							conteudo_fitas = conteudo_fitas
 						)
 
 	tm.executar()
+	tm.resultado()
 
 if __name__ == "__main__":
 	main()

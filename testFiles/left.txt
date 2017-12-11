@@ -1,0 +1,12 @@
+A X a
+A B X a
+B
+0 1 2 3
+0
+3
+1
+0 1 a A R
+1 1 a A R
+1 2 B B L
+2 2 A X L
+2 3 B B R
