@@ -22,7 +22,7 @@ def main():
 		return
 	
 
-	# abrir arquivo
+	# Abrir arquivo
 	try:
 		arquivo = open(sys.argv[1], 'r')
 	except IOError:
@@ -42,17 +42,17 @@ def main():
 	elements = []
 	content = arquivo.readline() #lendo linhas 1 a 7 e associando a lista 'content'
 	for i in range(7):
-		#associo o que peguei ate a linha 7 a lista de 'elements'
+		#Associo o que peguei até a linha 7 à lista de 'elements'.
 		elements.append(util.remove_escape_char(content))
 		content = arquivo.readline()
 
 	alfabeto_entrada = elements[0].split(' ')
-	alfabeto_fita = elements[1].split(' ')
-	branco = elements[2]
-	estados = elements[3].split(' ')
-	estado_inicial = elements[4]
-	estados_finais = elements[5].split(' ')
-	qtde_fitas = elements[6]
+	alfabeto_fita    = elements[1].split(' ')
+	branco           = elements[2]
+	estados          = elements[3].split(' ')
+	estado_inicial   = elements[4]
+	estados_finais   = elements[5].split(' ')
+	qtde_fitas       = elements[6]
 
 	#A partir da linha 58 ate a linha 64, e feita a associacao, conforme a quantidade de fitas lidas, do conteúdo delas, ficando isso armazenado na lista conteudo_fita.
 	conteudo_fitas = []

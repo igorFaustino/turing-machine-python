@@ -6,7 +6,7 @@ import tape
 import copy
 
 class TuringMachine(object):
-	""" Class Turing Machine, Simula uma maquina de turing """
+	""" Esta classe e quem faz a simulacao. """
 
 	def __init__(
 					self,
