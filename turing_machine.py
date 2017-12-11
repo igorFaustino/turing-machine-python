@@ -80,7 +80,7 @@ class TuringMachine(object):
 			#transicao a esquerda da fita
 			elif transicao[2] == 'L':
 				# como a funcao de escrever na fita insere elementos no comeco.. a posicao 0 sempre e o inicio da fita, logo a posicao -1 indica que a posicao lida esta fora do conteudo atual da fita
-				if tm.cabeca[i] >= -1:
+				if tm.cabeca[i] >= 0:
 					tm.cabeca[i] -= 1
 
 		if tm.estado_atual in tm.estados_finais:
