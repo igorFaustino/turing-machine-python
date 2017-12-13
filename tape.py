@@ -25,7 +25,7 @@ class Tape(object):
 			:param posicao: posicao da cabeca
 		"""
 
-		if posicao >= 0 and posicao < len(self.conteudo):
+		if posicao in self.conteudo:
 			return self.conteudo[posicao]
 		else:
 			return self.simbolo_branco
@@ -37,22 +37,8 @@ class Tape(object):
 			:param posicao: posicao da cabeca
 			:param valor: valor a ser escrito
 		"""
-
-		if posicao < 0:
-			fita = ""
-			for i  in self.conteudo:
-				fita += self.conteudo[i]
-			fita = valor + fita
-			self.conteudo = dict((enumerate(fita)))
-
-		elif posicao > len(self.conteudo):
-			fita = ""
-			for i  in self.conteudo:
-				fita += self.conteudo[i]
-			fita = fita + valor
-			self.conteudo = dict((enumerate(fita)))
-		else:
-			self.conteudo[posicao] = valor
+		
+		self.conteudo[posicao] = valor
 
 	def getConteudo(self):
 		"""

@@ -69,6 +69,9 @@ class TuringMachine(object):
 			:param transicao: transicao a ser computada
 		"""
 
+		# print transicoes
+		# print tm.fita[0].getConteudo()
+		# print tm.cabeca[0]
 		for transicao in transicoes:
 			i = transicao[3]
 			tm.estado_atual = transicao[0]
@@ -80,8 +83,7 @@ class TuringMachine(object):
 			#transicao a esquerda da fita
 			elif transicao[2] == 'L':
 				# como a funcao de escrever na fita insere elementos no comeco.. a posicao 0 sempre e o inicio da fita, logo a posicao -1 indica que a posicao lida esta fora do conteudo atual da fita
-				if tm.cabeca[i] >= 0:
-					tm.cabeca[i] -= 1
+				tm.cabeca[i] -= 1
 
 		if tm.estado_atual in tm.estados_finais:
 			# Marca que a palavra foi aceita
@@ -106,12 +108,20 @@ class TuringMachine(object):
 
 		# objeto de retorno.. como a cada iteracao a mt e clonada, e necessario retornar o novo estado das fitas
 		fitas = tm.fita
+
+		# percorre todas os elementos do vetor de transicoes
 		for transicao in tm.transicoes:
+			# cada elemento contem um dicionario, com o valor do estado atual e simbolo atual como chave, caso exista mais de uma fita, esse dicionario possui uma entrada para cada fita.. ex: [{keyFita1:valor1, keyFita2:valor2}, {keyFita1:valor1, keyFita2:valor2}, {keyFita1:valor1, keyFita2:valor2}]
 			_transicao = []
+
 			for i in range(int(tm.qtde_fitas)):
+				# percorre em cada dicionario as transicoes de cada fita.
 				if (tm.estado_atual, tm.fita[i].ler(tm.cabeca[i])) in transicao:
 					_transicao.append(transicao[tm.estado_atual, tm.fita[i].ler(tm.cabeca[i])])
+
+			# verifica se todas as fitas possuem transicoes validas
 			if len(_transicao) == int(tm.qtde_fitas):
+				# realiza as transicoes em uma copia da maquina de turing, para poder realizar uma nova transicao com os mesmos valores (nao deterministica)
 				_sucesso, fitas = tm._transicao(copy.deepcopy(tm), _transicao)
 
 			if _sucesso:

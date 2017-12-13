@@ -23,4 +23,5 @@ def format_transicoes(transicoes, qtd):
 
 		_transicoes.append(_transicao)
 
+	# print _transicoes
 	return _transicoes
